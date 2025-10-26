@@ -2,13 +2,12 @@
   "name": "ucsc-intellihack-tailwind",
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://github.com/SandhanuDulmeth/hackathon-website",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "react": "^18.2.0",
