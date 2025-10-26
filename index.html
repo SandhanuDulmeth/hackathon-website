@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="https://cdn.jsdelivr.net/gh/username/repo@version/path/to/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UCSC IntelliHack 2026</title>
+    <style>
+      /* Vanta background full-bleed under the app */
+      #my-background {
+        position: fixed;
+        inset: 0; /* top:0; right:0; bottom:0; left:0; */
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none; /* keep clicks for the app */
+      }
+      /* Ensure the app is above the background */
+      #root {
+        position: relative;
+        z-index: 1;
+      }
+      /* Optional: body reset so background fills full viewport */
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+    </style>
+    <!-- Load Three and Vanta in head with defer so they're available when React mounts -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.birds.min.js"></script>
+    <script type="module" crossorigin src="/hackathon-website/assets/index-c10ec06f.js"></script>
+    <link rel="stylesheet" href="/hackathon-website/assets/index-261385a3.css">
+  </head>
+  <body>
+    <!-- Vanta target sits behind the app -->
+    <div id="my-background" aria-hidden="true"></div>
+    <div id="root"></div>
+
+    <!-- App entry (module) placed after background scripts — safe for HMR -->
+    
+  </body>
+</html>
