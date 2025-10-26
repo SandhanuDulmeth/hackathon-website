@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smooth Scroll Animation Example</title>
+  <style>
+    /* ========================================
+       BASE STYLES
+       ======================================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(to bottom, #f7fafc, #edf2f7);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* ========================================
+       SCROLL ANIMATION CLASSES
+       These handle the fade-in and slide-up effects
+       ======================================== */
+
+    /* Default animation: 30px slide-up with 0.7s duration */
+    .scroll-animate {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Visible state - element is in viewport */
+    .scroll-animate.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Fast variant: 20px slide-up with 0.6s duration */
+    .scroll-animate-fast {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .scroll-animate-fast.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Slow variant: 30px slide-up with 0.8s duration */
+    .scroll-animate-slow {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .scroll-animate-slow.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Delay utilities for staggered animations */
+    .delay-100 { transition-delay: 100ms; }
+    .delay-200 { transition-delay: 200ms; }
+    .delay-300 { transition-delay: 300ms; }
+    .delay-400 { transition-delay: 400ms; }
+    .delay-500 { transition-delay: 500ms; }
+
+    /* ========================================
+       ACCESSIBILITY: RESPECT USER PREFERENCES
+       Disable animations for users who prefer reduced motion
+       ======================================== */
+    @media (prefers-reduced-motion: reduce) {
+      .scroll-animate,
+      .scroll-animate-fast,
+      .scroll-animate-slow {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
+    /* ========================================
+       DEMO CONTENT STYLES
+       ======================================== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+
+    .section {
+      padding: 80px 20px;
+      min-height: 50vh;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2d3748;
+    }
+
+    .section-subtitle {
+      font-size: 1.25rem;
+      text-align: center;
+      margin-bottom: 60px;
+      color: #718096;
+    }
+
+    /* Card Grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: #2d3748;
+    }
+
+    .card p {
+      color: #718096;
+      line-height: 1.8;
+    }
+
+    /* Image Demo */
+    .image-demo {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+    .image-placeholder {
+      width: 300px;
+      height: 200px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    /* Button */
+    .btn {
+      display: inline-block;
+      padding: 15px 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Footer */
+    .footer {
+      background: #2d3748;
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- ========================================
+       HERO SECTION
+       Elements animate on page load
+       ======================================== -->
+  <section class="hero">
+    <h1 class="scroll-animate">Smooth Scroll Animations</h1>
+    <p class="scroll-animate delay-200">Beautiful fade-in and slide-up effects as you scroll</p>
+    <a href="#section1" class="btn scroll-animate-fast delay-400">Scroll to Explore</a>
+  </section>
+
+  <!-- ========================================
+       SECTION 1: HEADINGS AND PARAGRAPHS
+       Demonstrates basic text animation
+       ======================================== -->
+  <section id="section1" class="section">
+    <div class="container">
+      <h2 class="section-title scroll-animate">Headings & Paragraphs</h2>
+      <p class="section-subtitle scroll-animate">Elements fade in and slide up when they enter the viewport</p>
+
+      <div class="scroll-animate-slow">
+        <p style="font-size: 1.1rem; text-align: center; max-width: 800px; margin: 0 auto; color: #4a5568;">
+          This is an example of smooth scroll animations using the Intersection Observer API.
+          Each element has a subtle slide-up motion (20-30px) combined with a fade-in effect.
+          The animations trigger when elements are 20% visible in the viewport, creating a
+          polished and professional user experience.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION 2: CARD GRID
+       Demonstrates staggered card animations
+       ======================================== -->
+  <section class="section" style="background: white;">
+    <div class="container">
+      <h2 class="section-title scroll-animate">Card Grid with Stagger</h2>
+      <p class="section-subtitle scroll-animate">Cards animate in sequence with a staggered delay</p>
+
+      <div class="card-grid">
+        <div class="card scroll-animate-fast">
+          <h3>Performance</h3>
+          <p>Uses CSS transforms and opacity for smooth, GPU-accelerated animations that maintain 60fps.</p>
+        </div>
+
+        <div class="card scroll-animate-fast delay-100">
+          <h3>Accessibility</h3>
+          <p>Respects user preferences with prefers-reduced-motion media query for better accessibility.</p>
+        </div>
+
+        <div class="card scroll-animate-fast delay-200">
+          <h3>Modern API</h3>
+          <p>Built with Intersection Observer API for efficient viewport detection without scroll listeners.</p>
+        </div>
+
+        <div class="card scroll-animate-fast delay-300">
+          <h3>Customizable</h3>
+          <p>Easy to customize timing, duration, and easing functions to match your design needs.</p>
+        </div>
+
+        <div class="card scroll-animate-fast delay-400">
+          <h3>Cross-Browser</h3>
+          <p>Works reliably across all modern browsers including Chrome, Firefox, Safari, and Edge.</p>
+        </div>
+
+        <div class="card scroll-animate-fast delay-500">
+          <h3>Lightweight</h3>
+          <p>No dependencies required. Pure vanilla JavaScript and CSS for minimal overhead.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION 3: IMAGE PLACEHOLDERS
+       Demonstrates image animation
+       ======================================== -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title scroll-animate">Image Animations</h2>
+      <p class="section-subtitle scroll-animate">Images smoothly fade in as they enter the viewport</p>
+
+      <div class="image-demo">
+        <div class="image-placeholder scroll-animate">Image 1</div>
+        <div class="image-placeholder scroll-animate delay-100">Image 2</div>
+        <div class="image-placeholder scroll-animate delay-200">Image 3</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION 4: MIXED CONTENT
+       Demonstrates various animation speeds
+       ======================================== -->
+  <section class="section" style="background: white;">
+    <div class="container">
+      <h2 class="section-title scroll-animate-slow">Different Animation Speeds</h2>
+      <p class="section-subtitle scroll-animate">Mix and match animation speeds for visual hierarchy</p>
+
+      <div style="max-width: 800px; margin: 0 auto;">
+        <div class="card scroll-animate-fast" style="margin-bottom: 20px;">
+          <h3>Fast Animation (0.6s)</h3>
+          <p>Quick and snappy animations work well for small UI elements and buttons.</p>
+        </div>
+
+        <div class="card scroll-animate" style="margin-bottom: 20px;">
+          <h3>Standard Animation (0.7s)</h3>
+          <p>The default speed provides a good balance between speed and smoothness.</p>
+        </div>
+
+        <div class="card scroll-animate-slow">
+          <h3>Slow Animation (0.8s)</h3>
+          <p>Slower animations create a more dramatic entrance for important content sections.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       FOOTER
+       ======================================== -->
+  <footer class="footer scroll-animate">
+    <p>&copy; 2025 Smooth Scroll Animation Example | Built with Vanilla JavaScript</p>
+  </footer>
+
+  <!-- ========================================
+       JAVASCRIPT: INTERSECTION OBSERVER
+       This script detects when elements enter the viewport
+       and adds the 'visible' class to trigger animations
+       ======================================== -->
+  <script>
+    /**
+     * Intersection Observer Configuration
+     *
+     * threshold: 0.2 means the callback fires when 20% of the element is visible
+     * rootMargin: Allows you to grow or shrink the viewport area (default: '0px')
+     */
+    const observerOptions = {
+      threshold: 0.2,        // Trigger when 20% of element is visible
+      rootMargin: '0px'      // No margin adjustment to viewport
+    };
+
+    /**
+     * Callback function that runs when observed elements intersect
+     *
+     * @param {IntersectionObserverEntry[]} entries - Array of observed elements
+     * @param {IntersectionObserver} observer - The observer instance
+     */
+    function handleIntersection(entries, observer) {
+      entries.forEach(entry => {
+        // Check if element is intersecting (visible in viewport)
+        if (entry.isIntersecting) {
+          // Add 'visible' class to trigger CSS animation
+          entry.target.classList.add('visible');
+
+          // Optional: Stop observing this element after animation
+          // Uncomment the line below if you want animations to trigger only once
+          // observer.unobserve(entry.target);
+        }
+      });
+    }
+
+    /**
+     * Create the Intersection Observer instance
+     * This observer will watch all elements with animation classes
+     */
+    const observer = new IntersectionObserver(handleIntersection, observerOptions);
+
+    /**
+     * Select all elements that should be animated
+     * We're targeting all three animation class variants
+     */
+    const animatedElements = document.querySelectorAll(
+      '.scroll-animate, .scroll-animate-fast, .scroll-animate-slow'
+    );
+
+    /**
+     * Start observing each animated element
+     * The observer will now track when these elements enter/exit the viewport
+     */
+    animatedElements.forEach(element => {
+      observer.observe(element);
+    });
+
+    /**
+     * USAGE NOTES:
+     *
+     * 1. To apply animation to any element, add one of these classes:
+     *    - .scroll-animate (default: 0.7s, 30px)
+     *    - .scroll-animate-fast (faster: 0.6s, 20px)
+     *    - .scroll-animate-slow (slower: 0.8s, 30px)
+     *
+     * 2. To add staggered delays, combine with delay classes:
+     *    <div class="scroll-animate delay-100">...</div>
+     *    <div class="scroll-animate delay-200">...</div>
+     *
+     * 3. To make animations trigger only once, uncomment the
+     *    observer.unobserve() line in the handleIntersection function
+     *
+     * 4. Adjust threshold (0.0 to 1.0) to control when animations trigger:
+     *    - 0.0 = as soon as any pixel is visible
+     *    - 0.5 = when 50% of element is visible
+     *    - 1.0 = only when entire element is visible
+     *
+     * 5. The prefers-reduced-motion media query automatically
+     *    disables animations for users with accessibility preferences
+     */
+
+    /**
+     * Performance Tip:
+     * Intersection Observer is more efficient than scroll event listeners
+     * because it runs asynchronously and doesn't block the main thread.
+     * This ensures smooth scrolling even with many animated elements.
+     */
+  </script>
+
+  <!-- ========================================
+       HOW TO USE IN YOUR PROJECT:
+
+       1. Copy the CSS animation classes to your stylesheet
+       2. Copy the JavaScript observer code to your script file
+       3. Add animation classes to HTML elements you want to animate
+       4. Customize timing, duration, and easing as needed
+       5. Test with keyboard navigation and screen readers
+
+       EXAMPLE:
+       <div class="scroll-animate">This will fade in on scroll</div>
+       <img src="photo.jpg" class="scroll-animate-fast delay-100" />
+       <section class="scroll-animate-slow">Large content block</section>
+       ======================================== -->
+</body>
+</html>

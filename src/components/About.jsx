@@ -1,7 +1,8 @@
 /* Vite + React */
 /* About section - two-column layout with highlights and event details card */
 
-import React, { useEffect, useRef, useState } from 'react'
+import React from 'react'
+import { useScrollAnimation, useMultipleScrollAnimations } from '../hooks/useScrollAnimation'
 
 // Inline SVG Icons
 const LightbulbIcon = () => (
@@ -29,27 +30,10 @@ const CodeIcon = () => (
 )
 
 export default function About() {
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef(null)
-
-  useEffect(() => {
-    // IntersectionObserver for entrance animation
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.unobserve(entry.target)
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
+  const headerAnimation = useScrollAnimation({ threshold: 0.2 })
+  const leftColumnAnimation = useScrollAnimation({ threshold: 0.2 })
+  const cardAnimations = useMultipleScrollAnimations(4, { threshold: 0.2, staggerDelay: 100 })
+  const detailsCardAnimation = useScrollAnimation({ threshold: 0.2 })
 
   const highlights = [
     {
@@ -75,15 +59,13 @@ export default function About() {
   ]
 
   return (
-    <section
-      ref={sectionRef}
-      className={`w-full py-20 md:py-32 bg-gradient-to-b from-gray-50  duration-1000 ${
-        isVisible ? 'opacity-100' : 'opacity-0'
-      }`}
-    >
+    <section className="w-full py-20 md:py-32 bg-gradient-to-b from-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className={`text-center mb-16 transition-all duration-1000 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+        <div
+          ref={headerAnimation.ref}
+          className={`text-center mb-16 scroll-animate ${headerAnimation.isVisible ? 'scroll-animate-visible' : ''}`}
+        >
           <h2 className="section-title">About IntelliHack 2026</h2>
           <p className="section-subtitle">
             A 48-hour innovation sprint where artificial intelligence meets human creativity.
@@ -93,7 +75,10 @@ export default function About() {
         {/* Two-Column Layout */}
         <div className="grid md:grid-cols-2 gap-12 mb-16">
           {/* Left Column - Description */}
-          <div className={`transition-all duration-1000 transform ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}>
+          <div
+            ref={leftColumnAnimation.ref}
+            className={`scroll-animate ${leftColumnAnimation.isVisible ? 'scroll-animate-visible' : ''}`}
+          >
             <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
               What is IntelliHack?
             </h3>
@@ -117,11 +102,12 @@ export default function About() {
           </div>
 
           {/* Right Column - Highlights Grid */}
-          <div className={`grid grid-cols-1 sm:grid-cols-2 gap-6 transition-all duration-1000 transform ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {highlights.map((highlight, index) => (
               <div
                 key={index}
-                className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 border border-gray-100"
+                ref={cardAnimations.setRef(index)}
+                className={`bg-white p-6 rounded-xl shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 border border-gray-100 scroll-animate-fast ${cardAnimations.visibleStates[index] ? 'scroll-animate-visible' : ''}`}
               >
                 <div className="mb-4">{highlight.icon}</div>
                 <h4 className="text-lg font-bold text-gray-900 mb-2">{highlight.title}</h4>
@@ -132,7 +118,10 @@ export default function About() {
         </div>
 
         {/* Event Details Card */}
-        <div className={`bg-gradient-to-r from-blue-50 to-red-50 border-2 border-blue-200 rounded-2xl p-8 md:p-12 transition-all duration-1000 transform ${isVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
+        <div
+          ref={detailsCardAnimation.ref}
+          className={`bg-gradient-to-r from-blue-50 to-red-50 border-2 border-blue-200 rounded-2xl p-8 md:p-12 scroll-animate-slow ${detailsCardAnimation.isVisible ? 'scroll-animate-visible' : ''}`}
+        >
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="text-4xl font-bold text-blue-600 mb-2">48</div>

@@ -1,7 +1,8 @@
 /* Vite + React */
 /* Registration section - client-side form with validation, checkboxes, and success state */
 
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState } from 'react'
+import { useScrollAnimation, useMultipleScrollAnimations } from '../hooks/useScrollAnimation'
 
 // Inline SVG Check Icon
 const CheckIcon = () => (
@@ -11,7 +12,6 @@ const CheckIcon = () => (
 )
 
 export default function Registration() {
-  const [isVisible, setIsVisible] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -21,26 +21,10 @@ export default function Registration() {
   })
   const [errors, setErrors] = useState({})
   const [submitted, setSubmitted] = useState(false)
-  const sectionRef = useRef(null)
 
-  useEffect(() => {
-    // IntersectionObserver for entrance animation
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.unobserve(entry.target)
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
+  const headerAnimation = useScrollAnimation({ threshold: 0.2 })
+  const formAnimation = useScrollAnimation({ threshold: 0.2 })
+  const fieldAnimations = useMultipleScrollAnimations(6, { threshold: 0.2, staggerDelay: 80 })
 
   const interestOptions = [
     'Machine Learning',
@@ -123,15 +107,13 @@ export default function Registration() {
   }
 
   return (
-    <section
-      ref={sectionRef}
-      className={`w-full py-20 md:py-32 transition-all duration-1000 ${
-        isVisible ? 'opacity-100' : 'opacity-0'
-      }`}
-    >
+    <section className="w-full py-20 md:py-32">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className={`text-center mb-12 transition-all duration-1000 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+        <div
+          ref={headerAnimation.ref}
+          className={`text-center mb-12 scroll-animate ${headerAnimation.isVisible ? 'scroll-animate-visible' : ''}`}
+        >
           <h2 className="section-title">Register for IntelliHack 2026</h2>
           <p className="section-subtitle">
             Join us for an unforgettable 48-hour innovation experience
@@ -156,13 +138,15 @@ export default function Registration() {
         {/* Registration Form */}
         {!submitted && (
           <form
+            ref={formAnimation.ref}
             onSubmit={handleSubmit}
-            className={`bg-gray-50 p-8 md:p-12 rounded-2xl shadow-lg transition-all duration-1000 transform ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-            }`}
+            className={`bg-gray-50 p-8 md:p-12 rounded-2xl shadow-lg scroll-animate ${formAnimation.isVisible ? 'scroll-animate-visible' : ''}`}
           >
             {/* Name Field */}
-            <div className="mb-6">
+            <div
+              ref={fieldAnimations.setRef(0)}
+              className={`mb-6 scroll-animate-fast ${fieldAnimations.visibleStates[0] ? 'scroll-animate-visible' : ''}`}
+            >
               <label htmlFor="name" className="block text-sm font-semibold text-gray-900 mb-2">
                 Full Name *
               </label>
@@ -181,7 +165,10 @@ export default function Registration() {
             </div>
 
             {/* Email Field */}
-            <div className="mb-6">
+            <div
+              ref={fieldAnimations.setRef(1)}
+              className={`mb-6 scroll-animate-fast ${fieldAnimations.visibleStates[1] ? 'scroll-animate-visible' : ''}`}
+            >
               <label htmlFor="email" className="block text-sm font-semibold text-gray-900 mb-2">
                 Email Address *
               </label>
@@ -200,7 +187,10 @@ export default function Registration() {
             </div>
 
             {/* Institution Field */}
-            <div className="mb-6">
+            <div
+              ref={fieldAnimations.setRef(2)}
+              className={`mb-6 scroll-animate-fast ${fieldAnimations.visibleStates[2] ? 'scroll-animate-visible' : ''}`}
+            >
               <label htmlFor="institution" className="block text-sm font-semibold text-gray-900 mb-2">
                 Institution *
               </label>
@@ -219,7 +209,10 @@ export default function Registration() {
             </div>
 
             {/* Team Size Field */}
-            <div className="mb-6">
+            <div
+              ref={fieldAnimations.setRef(3)}
+              className={`mb-6 scroll-animate-fast ${fieldAnimations.visibleStates[3] ? 'scroll-animate-visible' : ''}`}
+            >
               <label htmlFor="teamSize" className="block text-sm font-semibold text-gray-900 mb-2">
                 Team Size
               </label>
@@ -239,7 +232,10 @@ export default function Registration() {
             </div>
 
             {/* Interests Checkboxes */}
-            <div className="mb-8">
+            <div
+              ref={fieldAnimations.setRef(4)}
+              className={`mb-8 scroll-animate-fast ${fieldAnimations.visibleStates[4] ? 'scroll-animate-visible' : ''}`}
+            >
               <label className="block text-sm font-semibold text-gray-900 mb-4">
                 Areas of Interest * (Select at least one)
               </label>
@@ -262,16 +258,21 @@ export default function Registration() {
             </div>
 
             {/* Submit Button */}
-            <button
-              type="submit"
-              className="w-full btn-primary text-lg font-semibold"
+            <div
+              ref={fieldAnimations.setRef(5)}
+              className={`scroll-animate-fast ${fieldAnimations.visibleStates[5] ? 'scroll-animate-visible' : ''}`}
             >
-              Complete Registration
-            </button>
+              <button
+                type="submit"
+                className="w-full btn-primary text-lg font-semibold"
+              >
+                Complete Registration
+              </button>
 
-            <p className="text-center text-gray-600 text-sm mt-4">
-              By registering, you agree to our terms and conditions.
-            </p>
+              <p className="text-center text-gray-600 text-sm mt-4">
+                By registering, you agree to our terms and conditions.
+              </p>
+            </div>
           </form>
         )}
       </div>
