@@ -71,17 +71,17 @@ export default function App() {
   return (
     <div className="w-full ">
       {/* Color wash overlay between Vanta and content */}
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-cyan-500/10 via-fuchsia-500/10 to-amber-500/10"></div>
-      {/* Navigation Header */}
-        <header className="fixed top-0 left-0 right-0 bg-white/10 backdrop-blur-xl border-b border-white/20 shadow-lg z-50">
-          <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <div className="flex items-center gap-3">
-          <img
-            src={IntelliHackLogo}
-            alt="IntelliHack logo"
-            className="h-10 w-auto object-contain drop-shadow-md cursor-pointer"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            onError={(e)=>{e.currentTarget.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%231e40af%22/><text x=%2232%22 y=%2238%22 font-size=%2224%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial,Helvetica,sans-serif%22>IH</text></svg>';}}
+        <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-cyan-500/30 via-fuchsia-500/30 to-amber-500/30 scale-125"></div>
+        {/* Navigation Header */}
+      <header className="fixed top-0 left-0 right-0 bg-white/10 backdrop-blur border-b border-white/20 shadow-lg z-50">
+        <nav className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <img
+              src={IntelliHackLogo}
+              alt="IntelliHack logo"
+              className="h-12 w-auto object-contain drop-shadow-md cursor-pointer"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              onError={(e) => { e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%231e40af%22/><text x=%2232%22 y=%2238%22 font-size=%2224%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial,Helvetica,sans-serif%22>IH</text></svg>'; }}
             />
           </div>
           <button
@@ -92,8 +92,6 @@ export default function App() {
           </button>
         </nav>
       </header>
-
-      {/* Main Content */}
       <main className="pt-16">
         <Hero onRegisterClick={scrollToRegistration} />
         <About />
@@ -117,7 +115,7 @@ export default function App() {
             <img
               src={IEEECSLogo}
               alt="Organizer logo"
-              className="h-10 w-auto object-contain drop-shadow-md"
+              className="h-16 w-auto object-contain drop-shadow-md"
               onError={(e)=>{e.currentTarget.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 160 40%22><rect width=%22160%22 height=%2240%22 rx=%228%22 fill=%22000000%22 fill-opacity=%220.5%22/><text x=%2280%22 y=%2226%22 font-size=%2216%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial,Helvetica,sans-serif%22>UCSC IEEE</text></svg>';}}
             />
           </div>
