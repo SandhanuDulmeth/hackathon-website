@@ -1,7 +1,8 @@
 /* Vite + React */
 /* Main App component - orchestrates Hero, About, and Registration sections */
+/* Initializes Vanta Birds effect on full-page background */
 
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import Hero from './components/Hero'
 import About from './components/About'
 import Registration from './components/Registration'
@@ -9,13 +10,64 @@ import Registration from './components/Registration'
 export default function App() {
   // Reference to registration section for smooth scroll
   const registrationRef = useRef(null)
+  const vantaInstance = useRef(null)
+
+  // Initialize Vanta Birds on full-page background
+  useEffect(() => {
+    const initVanta = () => {
+      if (typeof window.VANTA !== 'undefined' && typeof window.VANTA.BIRDS === 'function') {
+        const bgElement = document.getElementById('my-background')
+        if (bgElement && !vantaInstance.current) {
+          try {
+            vantaInstance.current = window.VANTA.BIRDS({
+              el: bgElement,
+              mouseControls: true,
+              touchControls: true,
+              gyroControls: false,
+              minHeight: 200.0,
+              minWidth: 200.0,
+              scale: 1.0,
+              scaleMobile: 1.0,
+              backgroundAlpha: 1.0,
+              color1: 0x1e40af, // Tailwind blue-800
+              color2: 0xdc2626, // Tailwind red-600
+              birdSize: 1.2,
+              wingSpan: 25.0,
+              separation: 40.0,
+              cohesion: 20.0,
+              quantity: 3.0,
+            })
+            console.log('Vanta Birds initialized on full page')
+          } catch (e) {
+            console.warn('Vanta init error:', e)
+          }
+        }
+      }
+    }
+
+    // Retry loop: scripts load with defer, may not be ready on first mount
+    const id = setInterval(() => {
+      if (typeof window.VANTA !== 'undefined' && typeof window.VANTA.BIRDS === 'function') {
+        initVanta()
+        clearInterval(id)
+      }
+    }, 50)
+
+    return () => {
+      clearInterval(id)
+      if (vantaInstance.current && typeof vantaInstance.current.destroy === 'function') {
+        vantaInstance.current.destroy()
+        vantaInstance.current = null
+      }
+    }
+  }, [])
 
   const scrollToRegistration = () => {
     registrationRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full ">
       {/* Navigation Header */}
       <header className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">

@@ -125,7 +125,7 @@ export default function Registration() {
   return (
     <section
       ref={sectionRef}
-      className={`w-full py-20 md:py-32 bg-white transition-all duration-1000 ${
+      className={`w-full py-20 md:py-32 transition-all duration-1000 ${
         isVisible ? 'opacity-100' : 'opacity-0'
       }`}
     >

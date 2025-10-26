@@ -1,7 +1,7 @@
 /* Vite + React */
 /* Hero section - energetic gradient background, headline, date, tagline, and CTA button */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 // Inline SVG Brain Icon Component
 const BrainIcon = () => (
@@ -14,14 +14,14 @@ export default function Hero({ onRegisterClick }) {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    // Trigger animation on mount
+    // Trigger content animation on mount
     setIsVisible(true)
   }, [])
 
   return (
-    <section className="relative w-full min-h-screen bg-hero-gradient flex items-center justify-center overflow-hidden pt-16">
-      {/* Animated background elements */}
-      <div className="absolute top-10 left-10 w-72 h-72 bg-white opacity-5 rounded-full blur-3xl animate-pulse"></div>
+    <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden pt-16">
+      {/* Optional subtle decorative elements */}
+      <div className="absolute top-10 left-10 w-72 h-72  opacity-5 rounded-full blur-3xl animate-pulse"></div>
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-white opacity-5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
 
       {/* Content */}
