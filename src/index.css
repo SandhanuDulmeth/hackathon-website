@@ -34,6 +34,79 @@ body {
   .section-subtitle {
     @apply text-lg md:text-xl text-gray-600 mb-8;
   }
+
+  .bubble-nav {
+    @apply relative flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-2 py-2 shadow-lg backdrop-blur-xl;
+  }
+
+  .bubble-nav::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, rgba(129, 230, 217, 0.18), rgba(244, 114, 182, 0.18));
+    filter: blur(18px);
+    opacity: 0.75;
+    pointer-events: none;
+  }
+
+  .bubble-nav-indicator {
+    position: absolute;
+    top: 0.35rem;
+    height: calc(100% - 0.7rem);
+    border-radius: 9999px;
+    background: linear-gradient(135deg, rgba(129, 230, 217, 0.95), rgba(244, 114, 182, 0.95));
+    box-shadow: 0 12px 30px rgba(129, 230, 217, 0.25);
+    transition: transform 0.35s ease, width 0.35s ease, opacity 0.35s ease;
+    z-index: 1;
+  }
+
+  .bubble-nav-item {
+    @apply relative z-10 whitespace-nowrap px-4 py-2 text-sm font-semibold text-white/70 transition-colors duration-200;
+  }
+
+  .bubble-nav-item:hover {
+    @apply text-white;
+  }
+
+  .bubble-nav-item-active {
+    @apply text-gray-900;
+  }
+
+  .faq-card {
+    @apply relative overflow-hidden rounded-2xl border border-white/15 bg-white/10 p-6 shadow-xl backdrop-blur-xl transition-transform duration-300 md:p-8;
+  }
+
+  .faq-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(129, 230, 217, 0.18), rgba(244, 114, 182, 0.18));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .faq-card:hover {
+    transform: translateY(-6px);
+  }
+
+  .faq-card:hover::before {
+    opacity: 0.25;
+  }
+
+  .faq-question {
+    @apply text-xl font-semibold text-white;
+  }
+
+  .faq-answer {
+    @apply mt-2 text-base leading-relaxed text-white/70;
+  }
+
+  .sponsor-card {
+    @apply bg-white/10 backdrop-blur rounded-lg p-4 flex items-center justify-center hover:bg-white/20 transition-colors;
+  }
 }
 
 /* Scroll Animation Classes */

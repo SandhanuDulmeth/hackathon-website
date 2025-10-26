@@ -29,7 +29,7 @@ const CodeIcon = () => (
   </svg>
 )
 
-export default function About() {
+export default function About({ id }) {
   const headerAnimation = useScrollAnimation({ threshold: 0.2 })
   const leftColumnAnimation = useScrollAnimation({ threshold: 0.2 })
   const cardAnimations = useMultipleScrollAnimations(4, { threshold: 0.2, staggerDelay: 100 })
@@ -59,7 +59,7 @@ export default function About() {
   ]
 
   return (
-    <section className="w-full py-20 md:py-32 bg-gradient-to-b from-gray-50">
+    <section id={id} className="w-full py-20 md:py-32 bg-gradient-to-b from-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div
@@ -119,6 +119,7 @@ export default function About() {
 
         {/* Event Details Card */}
         <div
+          id="prizes"
           ref={detailsCardAnimation.ref}
           className={`bg-gradient-to-r from-blue-50 to-red-50 border-2 border-blue-200 rounded-2xl p-8 md:p-12 scroll-animate-slow ${detailsCardAnimation.isVisible ? 'scroll-animate-visible' : ''}`}
         >

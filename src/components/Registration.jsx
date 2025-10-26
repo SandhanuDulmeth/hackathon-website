@@ -11,7 +11,7 @@ const CheckIcon = () => (
   </svg>
 )
 
-export default function Registration() {
+export default function Registration({ id }) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -107,7 +107,7 @@ export default function Registration() {
   }
 
   return (
-    <section className="w-full py-20 md:py-32">
+    <section id={id} className="w-full py-20 md:py-32">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div

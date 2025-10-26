@@ -12,7 +12,7 @@ const BrainIcon = () => (
   </svg>
 )
 
-export default function Hero({ onRegisterClick }) {
+export default function Hero({ onRegisterClick, id }) {
   const textRefs = useRef([])
   const [glitchOffset, setGlitchOffset] = useState({ x: 0, y: 0 })
   const [rgbSplit, setRgbSplit] = useState(0)
@@ -69,7 +69,7 @@ export default function Hero({ onRegisterClick }) {
   }, [])
 
   return (
-    <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden pt-16">
+    <section id={id} className="relative w-full min-h-screen flex items-center justify-center overflow-hidden pt-16">
       {/* translucent color flow overlay to unify palette without hiding birds */}
 
       {/* liquid blobs (very light) */}
